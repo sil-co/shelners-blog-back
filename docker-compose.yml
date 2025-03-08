@@ -1,0 +1,23 @@
+
+services:
+    mysql:
+        container_name: blog-spring
+        image: mysql:8.0
+        ports:
+            - 3306:3306
+        volumes:
+            - ./docker-env/mysql/data:/var/lib/mysql
+            - ./docker-env/mysql/sqls:/docker-entrypoint-initdb.d
+        env_file:
+            - ./docker-env/docker.env
+    phpmyadmin:
+        container_name: blog-spring-phpmyadmin
+        image: phpmyadmin:latest
+        ports:
+            - 8080:80
+        volumes:
+            - ./docker-env/phpmyadmin/data:/sessions
+        environment:
+            PMA_HOST: mysql
+        depends_on:
+            - mysql
