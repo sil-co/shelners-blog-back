@@ -8,6 +8,4 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, String> {
     // Additional custom queries can be defined here if needed
-    List<Post> findByUserId(String userId);
-    
 }

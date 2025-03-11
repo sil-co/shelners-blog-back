@@ -1,6 +1,8 @@
 package blog_spring.myblog.entity;
 
 import jakarta.persistence.*;
+
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -26,8 +28,15 @@ public class Post {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    // private Instant createdAt = Instant.now();
+    
     // Default constructor
-    // public Post() {}
+    public Post() {}
+
+    public Post(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 
     // Getters and setters
     public String getId() {
