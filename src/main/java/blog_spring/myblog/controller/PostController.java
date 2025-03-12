@@ -65,27 +65,21 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<Post> createPost(@RequestBody Post post, @RequestHeader("Authorization") String token) {
-        if (!isTokenValid(token)) {
+        if (!isTokenValid(token, true)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+        String userId = jwtUtil.extractUserid(token);
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        post.setUserId(userId);
         Post savedPost = postService.createPost(post);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPost);
     }
 
-    // @GetMapping("/user/{userId}")
-    // public List<Post> getPostsByUserId(@PathVariable String userId) {
-    //     return postService.getPostsByUserId(userId);
-    // }
-
-    // @PostMapping("/user/{userId}")
-    // public Post createPost(@PathVariable String userId, @RequestBody Post post) {
-    //     return postService.createPost(userId, post);
-    // }
-
     @PutMapping("/{id}")
     public ResponseEntity<Post> updatePost(@PathVariable String id, @RequestBody Post post, @RequestHeader("Authorization") String token) {
-        System.out.println("error: " + token);
-        if (!isTokenValid(token)) {
+        if (!isTokenValid(token, false)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Post updatedPost = postService.updatePost(id, post);
@@ -94,7 +88,7 @@ public class PostController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable String id, @RequestHeader("Authorization") String token) {
-        if (!isTokenValid(token)) {
+        if (!isTokenValid(token, false)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         postService.deletePost(id);
@@ -102,9 +96,12 @@ public class PostController {
     }
 
     // Helper method to validate JWT token
-    private boolean isTokenValid(String token) {
-        if (token == null || !token.startsWith("Bearer ")) { return false; }
-        token = token.substring(7); // Remove "Bearer " prefix
+    private boolean isTokenValid(String token, Boolean isPost) {
+        if (token == null) { return false; }
+        if (!isPost) {
+            if (!token.startsWith("Bearer ")) { return false; }
+            token = token.substring(7); // Remove "Bearer " prefix
+        } 
         return jwtUtil.validateToken(token);
     }
 }

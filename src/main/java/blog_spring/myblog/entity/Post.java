@@ -13,7 +13,7 @@ public class Post {
     @Id
     private String id = UUID.randomUUID().toString();
 
-    @Column(name = "user_id", nullable = false)
+    @Column(nullable = false)
     private String userId;
 
     @Column(nullable = false)

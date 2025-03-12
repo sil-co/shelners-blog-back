@@ -21,17 +21,16 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    // "/api/posts", 
-                    // "/api/posts/*", 
                     "/api/users/login", 
                     "/api/posts/verify-owner/**", 
-                    "/api/users/test/**"
-                ).permitAll() // Make /api/posts public
-                // .requestMatchers("/api/posts/**").authenticated() // Require authentication for POST, PUT, DELETE
-                .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll() // Allow GET request without authentication
-                .requestMatchers(HttpMethod.POST, "/api/posts").permitAll() // Require authentication for creating posts
-                .requestMatchers(HttpMethod.PUT, "/api/posts/**").permitAll() // Require authentication for updates
-                .anyRequest().authenticated() // Require authentication for other endpoints
+                    "/api/users/test/**",
+                    "/api/posts"
+                ).permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/posts/").permitAll() 
+                .requestMatchers(HttpMethod.PUT, "/api/posts/**").permitAll() 
+                .requestMatchers(HttpMethod.DELETE, "/api/posts/**").permitAll() 
+                .anyRequest().authenticated() 
             )
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // Stateless API

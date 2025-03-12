@@ -47,12 +47,6 @@ public class JwtUtil {
             .parseClaimsJwt(token)
             .getBody();
         return claims.get("email", String.class);
-        // return Jwts.parserBuilder()
-        //     .setSigningKey(secretKey)
-        //     .build()
-        //     .parseClaimsJws(token)
-        //     .getBody()
-        //     .getSubject();
     }
 
     public String extractUserid(String token) {
